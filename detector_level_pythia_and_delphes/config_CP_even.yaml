@@ -1,0 +1,111 @@
+## Detector-level study with Pythia and Delphes
+
+# Folder where to keep everything for MadMiner WH studies, on which we store Madgraph samples and all .h5 files (setup, analyzed events, ...)
+main_dir: /lstore/titan/martafsilva/master_thesis/master_thesis_output/detector_level_pythia_and_delphes
+
+# Folder where to keep all the plots 
+plot_dir: /lstore/titan/martafsilva/master_thesis/master_thesis_output/detector_level_pythia_and_delphes/plots # Name of setup file (without the .h5)
+# Name of setup file (without the .h5)
+
+setup_file: setup_CP_even
+
+#Name of the cards_folder
+cards_folder_name: cards
+
+# If running pythia, the path for the Pythia card
+pythia_card: cards/pythia8_card.dat
+
+# Path for MadGraph installation
+mg_dir: /cvmfs/sw.el7/gcc63/madgraph/3.3.1/b01/
+
+# .h5 sample name to augment/train
+sample_name:  wh_signalWithBSMAndBackgrounds_CP_even #choices 
+
+
+alices:
+
+# Augmentation with alices (good idea for the training and testing to be consistent)
+  augmentation:
+    n_samples:  10000000
+    n_thetas:  10000
+    priors: ['gaussian', 0, 0.3]  # ['gaussian', 0, 0.4] #['flat', -1.2, 1.2] #['gaussian', 0, 0.4] 
+    prior_name: alices_gaussian_prior_0_03_10000_thetas_10e7_samples_CP_even #gaussian_prior_0_0.4 # flat_prior_m1.2_p1.2 # "gaussian_prior_0_0.4"
+
+
+  training:
+    observables:  kinematic_only #kinematic_only #"all_observables"
+    n_hidden: [100,100]
+    activation:  "tanh"
+    training_samples_name: alices_gaussian_prior_0_03_10000_thetas_10e7_samples_CP_even #flat_prior_m1.2_p1.2  #"gaussian_prior_0_0.4"
+    alpha: 0 
+    n_workers: 6
+    n_samples:  10000000
+    n_epochs: 50
+    batch_size: 128
+    nestimators: 5 #number of estimators for ALICES method NN ensemble
+
+
+
+sally:
+
+  augmentation:
+    n_samples:  5000000
+
+
+# Augmentation with alices (good idea for the training and testing to be consistent)
+  training:
+    observables:  "all_observables_remove_redundant_cos"
+    n_hidden: [50,]
+    activation:  "relu"
+    n_workers: 4
+    n_samples: 5000000
+    n_epochs: 50
+    batch_size: 128
+    nestimators: 5 #number of estimators for ALICES method NN ensemble
+
+
+###### Plotting - limits
+
+limits:
+
+  # what to use to extract the limits, given as input to the expected_limits function, choices = ['rate','histo','sally', 'ml']
+  mode: ml
+
+  # which of the training observable sets to use when extracting limits from a ALICES, ALICE or ml  method
+  observables: kinematic_only #all_observables_remove_redundant_cos
+
+  prior: alices_gaussian_prior_0_03_10000_thetas_10e7_samples_CP_even # for sally prior name equal to sally
+
+  # which of the architecture model (for each of the input variable configurations) to use
+  model: alices_hidden_[100, 100]_tanh_alpha_5_epochs_50_bs_128
+
+  #ALICE, ALICES or SALLY
+  method: alices
+
+  # if the limits are derived in shape-only histograms (i.e. without Poisson likelihood term)
+  shape_only: False 
+  
+  # which of the observables to use in the x-axis if extracting limits from histograms; required='histo' 
+  observable_x: None
+
+  # which of the observables to use in the y-axis if extracting limits from histograms; required='histo'
+  observable_y: None
+
+  # binning of the variable in the x-axis (can either be a standard observable or output of the ALICES/ALICE/SALLY network), type=float
+  binning_x: None 
+
+  # binning of the variable in the y-axis, type=float
+  binning_y: None
+
+  # whether or not to do histograms of likelihood in log_scale
+  do_log: False
+
+  # process charge+flavor inclusive samples',type=int
+  lumi: 300
+
+  # turns on debug functions
+  debug: False
+
+  grid_ranges: [-1.0,1.0]
+
+  grid_resolutions: 100

@@ -1,0 +1,106 @@
+ # -*- coding: utf-8 -*-
+
+"""
+Reweights WH signal events WH(->l v b b~), divided by W decay channel and charge (250k events/submission)
+- to be ran after signal generation if you want to run it multicore, since reweighting doesn't work in multi-core mode
+
+Marta Silva (LIP/IST/CERN-ATLAS), 23/01/2024
+"""
+
+import logging
+import os
+import math
+
+from madminer.core import MadMiner
+from madminer.lhe import LHEReader
+
+import argparse as ap
+import yaml
+
+
+# MadMiner output
+logging.basicConfig(
+    format='%(asctime)-5.5s %(name)-20.20s %(levelname)-7.7s %(message)s',
+    datefmt='%H:%M',
+    level=logging.DEBUG
+)
+
+# Output of all other modules (e.g. matplotlib)
+for key in logging.Logger.manager.loggerDict:
+    if "madminer" not in key:
+        logging.getLogger(key).setLevel(logging.WARNING)
+
+if __name__ == "__main__":
+
+    parser = ap.ArgumentParser(description='Reweights WH signal events WH(->l v b b~), divided by W decay channel and charge. Run after generation.',
+                                formatter_class=ap.ArgumentDefaultsHelpFormatter)
+
+    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_1D_CP_odd.yaml')
+    
+    parser.add_argument('-s','--do_signal',help='reweight signal samples', default=False, action='store_true')
+    
+    parser.add_argument('-bsm','--do_bsm',help='reweight bsm samples', default=False, action='store_true')
+
+    parser.add_argument('--auto_widths',help='Use parameter card with automatic width calculation',action='store_true',default=False)
+
+    args=parser.parse_args()
+
+    with open(args.config_file, 'r') as config_file:
+        config = yaml.safe_load(config_file)
+
+        main_dir = config['main_dir']
+        setup_file = config['setup_file']
+        cards_folder_name = config['cards_folder_name']
+
+    # Load morphing setup file
+    miner = MadMiner()
+    miner.load(f'{main_dir}/{setup_file}.h5')
+    lhe = LHEReader(f'{main_dir}/{setup_file}.h5')
+
+    # List of benchmarks - SM + 2 BSM benchmarks (from Madminer)
+    list_benchmarks = lhe.benchmark_names_phys
+
+    # auto width calculation
+    # NB: Madgraph+SMEFTsim include terms up to quadratic order in the automatic width calculation, even when the ME^2 is truncated at the SM+interference term
+    if args.auto_widths:
+        param_card_template_file=f'{cards_folder_name}/param_card_template_SMEFTsim3_MwScheme_autoWidths.dat'
+    else:
+        param_card_template_file=f'{cards_folder_name}/param_card_template_SMEFTsim3_MwScheme.dat'
+        
+    channels = ['wph_mu', 'wph_e', 'wmh_mu', 'wmh_e']
+    
+    if args.do_signal:
+        for channel in channels:
+            for run in os.listdir(f'{main_dir}/signal_samples/{channel}_smeftsim_SM/Events'):
+                miner.reweight_existing_sample(
+                    mg_process_directory=f'{main_dir}/signal_samples/{channel}_smeftsim_SM',
+                    run_name=run,
+                    sample_benchmark='sm',
+                    reweight_benchmarks= ['pos_chwtil','neg_chwtil'], 
+                    param_card_template_file=param_card_template_file,
+                    log_directory=f'{main_dir}/logs/{channel}_smeftsim_SM_reweight/{run}',
+                )
+
+    if args.do_bsm:
+        for channel in channels:
+            for run in os.listdir(f'{main_dir}/signal_samples/{channel}_smeftsim_pos_chwtil/Events'):
+                miner.reweight_existing_sample(
+                    mg_process_directory=f'{main_dir}/signal_samples/{channel}_smeftsim_pos_chwtil',
+                    run_name=run,
+                    sample_benchmark='pos_chwtil',
+                    reweight_benchmarks= ['sm', 'neg_chwtil'], 
+                    param_card_template_file=param_card_template_file,
+                    log_directory=f'{main_dir}/logs/{channel}_smeftsim_pos_chwtil_reweight/{run}',
+                )
+
+            for run in os.listdir(f'{main_dir}/signal_samples/{channel}_smeftsim_neg_chwtil/Events'):
+                miner.reweight_existing_sample(
+                    mg_process_directory=f'{main_dir}/signal_samples/{channel}_smeftsim_neg_chwtil',
+                    run_name=run,
+                    sample_benchmark='neg_chwtil',
+                    reweight_benchmarks= ['sm', 'pos_chwtil'], 
+                    param_card_template_file=param_card_template_file,
+                    log_directory=f'{main_dir}/logs/{channel}_smeftsim_neg_chwtil_reweight/{run}',
+                )
+
+  

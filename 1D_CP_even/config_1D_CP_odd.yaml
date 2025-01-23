@@ -1,0 +1,22 @@
+### 1D CP-odd study
+
+# Folder where to keep everything for MadMiner WH studies, on which we store Madgraph samples and all .h5 files (setup, analyzed events, ...)
+main_dir: /lstore/titan/martafsilva/master_thesis/master_thesis_output/1D_CP_even
+
+# Folder where to keep all the plots 
+plot_dir: /lstore/titan/martafsilva/master_thesis/master_thesis_output/1D_CP_even/plots # Name of setup file (without the .h5)
+
+# Name of setup file (without the .h5)
+setup_file: setup_1D_CP_even
+
+# Name of the cards_folder
+cards_folder_name: cards
+
+# If running pythia, the path for the Pythia card
+pythia_card: cards/pythia8_card.dat
+
+# Path for MadGraph installation
+mg_dir: /cvmfs/sw.el7/gcc63/madgraph/3.3.1/b01/
+
+# If running delphes, the path for the Delphes card
+delphes_card: cards/delphes_card_ATLAS.tcl

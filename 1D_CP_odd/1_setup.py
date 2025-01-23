@@ -44,19 +44,21 @@ def setup_madminer(main_dir,plot_dir):
         parameter_name='cHWtil',
         morphing_max_power=2, # interference + squared terms
         parameter_range=(-1.2,1.2),
-        param_card_transform='1.0*theta' # mandatory to avoid a crash due to a bug (see Evernote)
+        param_card_transform='1.0*theta' # mandatory to avoid a crash due to a bug
     )
 
     # Only want the SM benchmark specifically - let Madminer choose the others
-    miner.add_benchmark({'cHWtil':0.000000},'sm')
+    miner.add_benchmark({'cHWtil':0.00},'sm')
+    miner.add_benchmark({'cHWtil':1.15},'pos_chwtil')
+    miner.add_benchmark({'cHWtil':-1.035},'neg_chwtil')
 
     # Morphing - automatic optimization to avoid large weights
     miner.set_morphing(max_overall_power=2,include_existing_benchmarks=True)
 
-    miner.save(f'{main_dir}/setup_parton_level_validation.h5')
+    miner.save(f'{main_dir}/setup_1D_CP_odd.h5')
 
     morphing_basis=plot_1d_morphing_basis(miner.morpher,xlabel=r'$\tilde{c_{HW}}$',xrange=(-1.2,1.2))
-    morphing_basis.savefig(f'{plot_dir}/morphing_basis_parton_level_validation.pdf')
+    morphing_basis.savefig(f'{plot_dir}/morphing_basis_1D_CP_odd.pdf')
 
     return miner
     
@@ -67,7 +69,7 @@ if __name__ == "__main__":
                                morphing up to second order (SM + SM-EFT interference + EFT^2 term).',
                                formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_parton_level_validation.yaml')
+    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_1D_CP_odd.yaml')
     args = parser.parse_args()
 
     # Read main_dir and plot_dir from the YAML configuration file

@@ -13,8 +13,8 @@ echo ${SETUP_FILE}
 echo "DO_DELPHES: " ${DO_DELPHES} "DELPHES_CARD: " ${DELPHES_CARD}
 
 if [ "$DO_DELPHES" = "True" ]; then
-python3 3a_delphes_analysis.py --main_dir ${MAIN_DIR} --sample_dir ${SAMPLE_DIR} --setup_file ${SETUP_FILE} --benchmark ${BENCHMARK} --do_delphes --delphes_card ${DELPHES_CARD}
+python3 3a_run_delphes_analysis.py --main_dir ${MAIN_DIR} --sample_dir ${SAMPLE_DIR} --setup_file ${SETUP_FILE} --benchmark ${BENCHMARK} --do_delphes --delphes_card ${DELPHES_CARD}
 else
-python3 3a_delphes_analysis.py --main_dir ${MAIN_DIR} --sample_dir ${SAMPLE_DIR} --setup_file ${SETUP_FILE} --benchmark ${BENCHMARK}
+python3 3a_run_delphes_analysis.py --main_dir ${MAIN_DIR} --sample_dir ${SAMPLE_DIR} --setup_file ${SETUP_FILE} --benchmark ${BENCHMARK}
 fi
 

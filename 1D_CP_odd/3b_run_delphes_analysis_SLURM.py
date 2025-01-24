@@ -11,11 +11,13 @@ def run_delphes_analysis_SLURM(sample_folder, main_dir,setup_file, do_delphes, d
     runs = sorted(os.listdir(sample_folder))
     for run in runs:
         full_path=f'{sample_folder}/{run}/'
-        sbatch_env=f'--export=ALL,SAMPLE_DIR={full_path},MAIN_DIR={main_dir}, BENCHMARK={benchmark}, SETUP_FILE={setup_file}'
+        sbatch_env=f'--export=ALL,SAMPLE_DIR={full_path},MAIN_DIR={main_dir},BENCHMARK={benchmark},SETUP_FILE={setup_file}'
         if do_delphes:
             sbatch_env+=f',DO_DELPHES=True,DELPHES_CARD={delphes_card}'
+
         subprocess.run(['sbatch',sbatch_env,'./3c_run_delphes_analysis_SLURM.sh'])
         
+      
 
 if __name__ == '__main__':
 

@@ -86,25 +86,21 @@ if __name__ == '__main__':
 
     parser = ap.ArgumentParser(description='Detector-level analysis of signal and background events (with Delphes). Includes the computation of the pZ of the neutrino and several angular observables',formatter_class=ap.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_1D_CP_even.yaml')
+    parser.add_argument('--main_dir',help='folder where to keep everything for MadMiner WH studies, on which we store Madgraph samples and all .h5 files (setup, analyzed events, ...)', required=True)
 
     parser.add_argument('--sample_dir',help='folder where the individual sample is', required=True)
 
     parser.add_argument('--do_delphes',help='run Delphes before analysis code', default=True, action="store_true")
    
-    parser.add_argument('--benchmark',help='benchmark from which the sample is originally generated', default=True, action="store_true")
+    parser.add_argument('--benchmark',help='benchmark from which the sample is originally generated')
    
     args=parser.parse_args()
 
-    # Read configuration parameters from the YAML file
-    with open(args.config_file, 'r') as config_file:
+    print(f"SETUP_FILE: {args.setup_file}")
+    print(f"BENCHMARK: {args.benchmark}")
 
-        config = yaml.safe_load(config_file)
-        main_dir = config['main_dir']
-        setup_file = config['setup_file']
-        delphes_card = config['delphes_card']
-        
+
     if 'background' in args.sample_dir:
-        process_events(f'{args.sample_dir}',f'{setup_file}',is_background_process=True,k_factor=1.0,do_delphes=args.do_delphes, delphes_card=delphes_card, benchmark = args.benchmark)
+        process_events(f'{args.sample_dir}',f'{args.main_dir}/{args.setup_file}.h5',is_background_process=True,k_factor=1.0,do_delphes=args.do_delphes, delphes_card=args.delphes_card, benchmark = args.benchmark)
     else:
-        process_events(f'{args.sample_dir}',f'{setup_file}',is_background_process=False,k_factor=1.0,do_delphes=args.do_delphes, delphes_card=delphes_card, benchmark = args.benchmark)
+        process_events(f'{args.sample_dir}',f'{args.main_dir}/{args.setup_file}.h5',is_background_process=False,k_factor=1.0,do_delphes=args.do_delphes, delphes_card=args.delphes_card, benchmark = args.benchmark)

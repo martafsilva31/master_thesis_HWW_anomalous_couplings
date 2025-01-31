@@ -93,7 +93,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generates WH signal events WH(->l v b b~), divided by W decay channel and charge.',
                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config.yaml')
+    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_parton_level_validation.yaml')
 
     parser.add_argument('--do_pythia',help='whether or not to run Pythia after Madgraph',action='store_true',default=False)
 

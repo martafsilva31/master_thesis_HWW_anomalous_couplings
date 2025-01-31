@@ -116,14 +116,14 @@ def alice_training(config):
   os.makedirs(f"{config['plot_dir']}/{config['observable_set']}/losses/{config['alice']['training']['training_samples_name']}/{config['alice']['training']['observables']}/{model_name}", exist_ok=True)
 
   # Save the plot #Tenho que por aqui o path coreeto
-  fig.savefig(f"{config['plot_dir']}/{config['observable_set']}/losses/{config['alice']['training']['training_samples_name']}/{config['alice']['training']['observables']}/{model_name}/alice_losses_{config['sample_name']}.png")
+  fig.savefig(f"{config['plot_dir']}/{config['observable_set']}/losses/{config['alice']['training']['training_samples_name']}/{config['alice']['training']['observables']}/{model_name}/alice_losses_{config['sample_name']}.pdf")
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Trains an ensemble of NNs as estimators for the ALICE method.',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config.yaml')
+    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_parton_level_validation.yaml')
 
 
     args=parser.parse_args()

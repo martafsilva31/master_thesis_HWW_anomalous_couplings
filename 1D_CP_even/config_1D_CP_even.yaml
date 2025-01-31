@@ -1,13 +1,13 @@
 ### 1D CP-odd study
 
 # Folder where to keep everything for MadMiner WH studies, on which we store Madgraph samples and all .h5 files (setup, analyzed events, ...)
-main_dir: /lstore/titan/martafsilva/master_thesis/master_thesis_output/2D_low_pT
+main_dir: /lstore/titan/martafsilva/master_thesis/master_thesis_output/1D_CP_even
 
 # Folder where to keep all the plots 
-plot_dir: /lstore/titan/martafsilva/master_thesis/master_thesis_output/2D_low_pT/plots # Name of setup file (without the .h5)
+plot_dir: /lstore/titan/martafsilva/master_thesis/master_thesis_output/1D_CP_even/plots # Name of setup file (without the .h5)
 
 # Name of setup file (without the .h5)
-setup_file: setup_2D_low_pT
+setup_file: setup_1D_CP_even
 
 # Name of the cards_folder
 cards_folder_name: cards
@@ -21,23 +21,24 @@ mg_dir: /cvmfs/sw.el7/gcc63/madgraph/3.3.1/b01/
 # If running delphes, the path for the Delphes card
 delphes_card: cards/delphes_card_ATLAS.tcl
 
+# .h5 sample name to augment/train
+sample_name: wh_signalWithBSMAndBackgrounds
+
 alices:
 
 # Augmentation with alices 
   augmentation:
     n_samples:  -1
     n_thetas:  10000
-    priors: 
-      - [gaussian, 0.0, 0.4]
-      - [gaussian, 0.0, 0.3]   
-    prior_name: alices_gaussian_prior_0_0.4_10000_thetas
+    priors: [gaussian, 0.0, 0.4]
+    prior_name: alices_gaussian_prior_0_0.4_10000_thetas_10e7_samples
     n_processes: 6
 
   training:
     observables: all_observables_remove_redundant_cos
     n_hidden: [100, 100]
     activation:  tanh
-    training_samples_name: alices_gaussian_prior_0_0.4_10000_thetas
+    training_samples_name: alices_gaussian_prior_0_0.4_10000_thetas_10e7_samples
     alpha: 5 
     n_workers: 2
     n_samples:  11500000
@@ -62,7 +63,6 @@ sally:
     batch_size: 128
     nestimators: 5 #number of estimators for ALICES method NN ensemble
 
-
 ###### Plotting - limits
 
 limits:
@@ -71,9 +71,9 @@ limits:
   mode: ml
 
   # which of the training observable sets to use when extracting limits from a ALICES, ALICE or ml  method
-  observables: kinematic_only
+  observables: kinematic_only #all_observables_remove_redundant_cos
 
-  prior: alices_gaussian_prior_0_0.4_0_0.3_10000_thetas_10e7_samples_2D
+  prior: alices_gaussian_prior_0_03_10000_thetas_10e7_samples_CP_even # for sally prior name equal to sally
 
   # which of the architecture model (for each of the input variable configurations) to use
   model: alices_hidden_[100, 100]_tanh_alpha_5_epochs_50_bs_128
@@ -105,9 +105,6 @@ limits:
   # turns on debug functions
   debug: False
 
-  grid_ranges:
-    - [-1.2, 1.2]
-    - [-1.0, 1.0]
-  grid_resolutions:
-    - 25
-    - 25
+  grid_ranges: [-1.0,1.0]
+
+  grid_resolutions: 100

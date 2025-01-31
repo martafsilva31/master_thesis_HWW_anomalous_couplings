@@ -37,7 +37,7 @@ for key in logging.Logger.manager.loggerDict:
 
 # Choose the GPU
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = os.environ.get("GPU", "1")
+os.environ["CUDA_VISIBLE_DEVICES"] = os.environ.get("GPU", "0")
 #os.environ["CUDA_VISIBLE_DEVICES"] = os.environ.get("GPU", "1")
 
 # timestamp for model saving
@@ -53,7 +53,7 @@ def sally_augmentation(config):
     nsamples = madminer_settings[6]
 
     logging.info(
-        f'sample_name: {config["sample_name"]}; '  
+        f'sample_name: {config["sample_name"]}; '
         f'training observables: {config["sally"]["training"]["observables"]}; '
         f'nsamples: {nsamples}'
     )
@@ -87,7 +87,7 @@ def sally_augmentation(config):
                                         filename=f'train_score_{config["sample_name"]}_{i_estimator}',
                                         sample_only_from_closest_benchmark=True)
     
-  #logging.info(f'effective number of samples for estimator {i_estimator}: {eff_n_samples}')
+  logging.info(f'effective number of samples for estimator {i_estimator}: {eff_n_samples}')
 
 
 def sally_training(config):
@@ -106,7 +106,6 @@ def sally_training(config):
 
     logging.info(
         f'sample_name: {config["sample_name"]}; '
-        f' '
         f'training observables: {config["sally"]["training"]["observables"]}; '
         f'nsamples: {nsamples}'
     )
@@ -134,9 +133,6 @@ def sally_training(config):
   elif config["sally"]["training"]["observables"] == 'mttot_ql_cos_deltaPlus':
       my_features = [39,50]
 
-
-  # Other options still to be implemented
-  
   #Create a list of ScoreEstimator objects to add to the ensemble
   estimators = [ ScoreEstimator(features=my_features, n_hidden=config["sally"]["training"]["n_hidden"],activation=config["sally"]["training"]["activation"]) for _ in range(config['sally']['training']['nestimators']) ]
   ensemble = Ensemble(estimators)
@@ -170,15 +166,15 @@ def sally_training(config):
 
   os.makedirs(f"{config['plot_dir']}/losses/sally/{config['sally']['training']['observables']}/{model_name}", exist_ok=True)
 
-  # Save the plot #Tenho que por aqui o path coreeto
-  fig.savefig(f"{config['plot_dir']}/losses/sally/{config['sally']['training']['observables']}/{model_name}/sally_losses_{config['sample_name']}.png")
+  # Save the plot 
+  fig.savefig(f"{config['plot_dir']}/losses/sally/{config['sally']['training']['observables']}/{model_name}/sally_losses_{config['sample_name']}.pdf")
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Trains an ensemble of NNs as estimators for the SALLY method.',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_CP_even.yaml')
+    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_1D_CP_odd.yaml')
 
     parser.add_argument('--augment',help="creates training samples;",action='store_true',  default = False)
     

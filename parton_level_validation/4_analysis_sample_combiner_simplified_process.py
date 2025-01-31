@@ -44,7 +44,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Combines and shuffles different samples, depending on the purposes.',
                                formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     
-    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config.yaml')
+    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_parton_level_validation.yaml')
 
     args = parser.parse_args()
 

@@ -75,10 +75,6 @@ def alices_training(config):
     if config["alices"]["training"]["observables"] == 'kinematic_only':
        my_features = None
 
-  if config["observable_set"] == "met":
-    if config["alices"]["training"]["observables"] == 'kinematic_only':
-       my_features = None
-
   # Other options still to be implemented
   
   #Create a list of ParameterizedRatioEstimator objects to add to the ensemble
@@ -119,17 +115,15 @@ def alices_training(config):
   os.makedirs(f"{config['plot_dir']}/{config['observable_set']}/losses/{config['alices']['training']['training_samples_name']}/{config['alices']['training']['observables']}/{model_name}", exist_ok=True)
 
   # Save the plot #Tenho que por aqui o path coreeto
-  fig.savefig(f"{config['plot_dir']}/{config['observable_set']}/losses/{config['alices']['training']['training_samples_name']}/{config['alices']['training']['observables']}/{model_name}/alices_losses_{config['sample_name']}.png")
+  fig.savefig(f"{config['plot_dir']}/{config['observable_set']}/losses/{config['alices']['training']['training_samples_name']}/{config['alices']['training']['observables']}/{model_name}/alices_losses_{config['sample_name']}.pdf")
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Creates augmented (unweighted) training samples for the Approximate likelihood with improved cross-entropy estimator and score method (ALICES). Trains an ensemble of NNs as estimators.',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config.yaml')
-
-    # parser.add_argument('--augment',help="creates training samples;",action='store_true',  default = False)
-    
+    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_parton_level_validation.yaml')
+ 
     parser.add_argument('--train',help=" does alices training; ",action='store_true',  default = False)
 
     args=parser.parse_args()
@@ -141,7 +135,5 @@ if __name__ == "__main__":
                 
     logging.info(f'observable set: {config["observable_set"]}; sample type: {config["sample_name"]}')
     
-    # if args.augment:
-    #     alices_augmentation(config)
     if args.train:
         alices_training(config)

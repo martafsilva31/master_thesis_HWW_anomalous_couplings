@@ -153,14 +153,14 @@ def sally_training(config):
   os.makedirs(f"{config['plot_dir']}/{config['observable_set']}/losses/sally/{config['sally']['training']['observables']}/{model_name}", exist_ok=True)
 
   # Save the plot #Tenho que por aqui o path coreeto
-  fig.savefig(f"{config['plot_dir']}/{config['observable_set']}/losses/sally/{config['sally']['training']['observables']}/{model_name}/sally_losses_{config['sample_name']}.png")
+  fig.savefig(f"{config['plot_dir']}/{config['observable_set']}/losses/sally/{config['sally']['training']['observables']}/{model_name}/sally_losses_{config['sample_name']}.pdf")
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Trains an ensemble of NNs as estimators for the SALLY method.',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config.yaml')
+    parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_parton_level_validation.yaml')
 
     parser.add_argument('--augment',help="creates training samples;",action='store_true',  default = False)
     

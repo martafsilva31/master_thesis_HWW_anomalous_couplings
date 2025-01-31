@@ -114,7 +114,7 @@ if __name__ == "__main__":
   
   parser = argparse.ArgumentParser(description='Parton-level analysis of signal events with a complete set of observables (including leading neutrino 4-vector).',formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-  parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config.yaml')
+  parser.add_argument('--config_file', help='Path to the YAML configuration file', default='config_parton_level_validation.yaml')
 
   parser.add_argument('--do_signal',help='analyze signal events', action='store_true',default=True)
 

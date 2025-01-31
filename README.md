@@ -17,14 +17,23 @@ source 0_setup_SMEFTsim_model.sh
 To run the analysis, execute the scripts in the following order:
 
 - **`1_setup.py`**: Defines the Wilson coefficient and morphing setup and creates a setup file.
+
 - **`2a_gen_signal.py`**: Generates signal samples or prepares files for batch system execution.
+
 - **`2b_gen_background.py`**: Generates background samples or prepares files for batch system execution.
+
 - **`2c_reweight_signal.py`**: This step is optional, but if running generation on multi-core mode, it is recommended to do the reweighting separately.
+
 - **`3a_run_delphes_analysis.py`**: Defines detector-level observables and performs Delphes-based analysis.
+
 - **`3b_run_delphes_analysis_SLURM.py`**: Use this script instead of **`3a_run_delphes_analysis.py`** if running on SLURM. This uses both **`3a_run_delphes_analysis.py`** and **`3c_run_delphes_analysis_SLURM.sh`** scripts.
+
 - **`4_analysis_sample_combiner.py`**: Combines analyzed samples.
+
 - **`5a_alices_training.py`**: Performs data augmentation and training for ALICES.
+
 - **`5b_sally_training.py`**: Performs data augmentation and training for SALLY.
+
 - **`6_evaluate_limits.py`**: Computes limits using the full likelihood ratio (asymptotic limit) for ALICES and SALLY.
 
 ## Usage

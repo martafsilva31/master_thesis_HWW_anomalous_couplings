@@ -76,7 +76,7 @@ def process_events(event_path, setup_file_path, is_background_process=False, k_f
     # requiring the two leading jets to be b-tagged
     reader.add_cut('j[0].b_tag',required=True)
     reader.add_cut('j[1].b_tag',required=True)
-    
+    reader.add_cut('pt_w > 150.')
 
     reader.analyse_delphes_samples(delete_delphes_files=True)
 
